@@ -17,27 +17,28 @@ public class ProductListPage {
     }
 
     public void goToCategoryAndSubcategory(String categoria, String subcategoria) {
-        // Click en la categoría (ej: Clothes)
+        // Busco y doy click en la categoría (por ejemplo: Clothes)
         By categoryLink = By.linkText(categoria);
         Hooks.getWait().until(ExpectedConditions.elementToBeClickable(categoryLink)).click();
 
-        // Click en la subcategoría (ej: Men)
+        // Luego entro a la subcategoría (por ejemplo: Men)
         By subCategoryLink = By.linkText(subcategoria);
         Hooks.getWait().until(ExpectedConditions.elementToBeClickable(subCategoryLink)).click();
     }
 
     public void openFirstProduct() {
-        // En PrestaShop, los títulos de productos tienen class "product-title"
+        // Aquí obtengo todos los productos que aparecen en la lista
         By productTitles = By.cssSelector(".product-title a");
 
         Hooks.getWait().until(ExpectedConditions.visibilityOfElementLocated(productTitles));
         List<WebElement> products = driver.findElements(productTitles);
 
+        // Si no hay productos, algo salió mal y no debería continuar
         if (products.isEmpty()) {
             throw new RuntimeException("No se encontraron productos en la lista");
         }
 
-        // Abrimos el primer producto
+        // Abro el primer producto encontrado
         products.get(0).click();
     }
 }

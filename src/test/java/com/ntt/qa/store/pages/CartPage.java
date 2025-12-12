@@ -10,10 +10,10 @@ public class CartPage {
 
     private final WebDriver driver;
 
-    // Título del carrito (ej. "Shopping Cart")
+    // Título que aparece en la página del carrito
     private final By cartTitle = By.cssSelector("h1, h1.page-title");
 
-    // Selectores aproximados típicos de PrestaShop 1.7 para carrito
+    // Selectores para obtener precios dentro del carrito
     private final By cartUnitPrice = By.cssSelector(".cart-item .product-price, .cart-summary-line .product-price, .cart-item .current-price span");
     private final By cartTotalPrice = By.cssSelector(".cart-item .product-total .value, .cart-summary-line .cart-total .value, .cart-summary-line .value");
 
@@ -22,6 +22,7 @@ public class CartPage {
     }
 
     public boolean isCartTitleVisible() {
+        // Verifico si estoy realmente en la página del carrito
         try {
             Hooks.getWait().until(ExpectedConditions.visibilityOfElementLocated(cartTitle));
             return true;
@@ -31,6 +32,7 @@ public class CartPage {
     }
 
     public double getUnitPriceFromCart() {
+        // Obtengo el precio unitario del carrito
         WebElement priceElement = Hooks.getWait().until(
                 ExpectedConditions.visibilityOfElementLocated(cartUnitPrice)
         );
@@ -39,6 +41,7 @@ public class CartPage {
     }
 
     public double getTotalFromCart() {
+        // Obtengo el precio total mostrado en el carrito
         WebElement totalElement = Hooks.getWait().until(
                 ExpectedConditions.visibilityOfElementLocated(cartTotalPrice)
         );
@@ -46,10 +49,11 @@ public class CartPage {
         return parsePrice(totalText);
     }
 
+    // Convierte el texto del precio a número (elimina PEN, $, espacios, etc.)
     private double parsePrice(String text) {
         String cleaned = text.replaceAll("[^0-9.,]", "").replace(",", ".");
         if (cleaned.isEmpty()) {
-            throw new RuntimeException("No se pudo parsear el precio desde el texto del carrito: " + text);
+            throw new RuntimeException("No se pudo obtener el precio del texto del carrito: " + text);
         }
         return Double.parseDouble(cleaned);
     }

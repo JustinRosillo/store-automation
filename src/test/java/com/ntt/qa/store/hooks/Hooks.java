@@ -16,24 +16,26 @@ public class Hooks {
 
     @Before
     public void setUp() {
-        // Configura automáticamente el ChromeDriver correcto
+        // Configuro el driver de Chrome para no tener que descargarlo a mano
         WebDriverManager.chromedriver().setup();
 
+        // Abro el navegador
         driver = new ChromeDriver();
         driver.manage().window().maximize();
 
-        // Espera explícita (10 segundos)
+        // Creo una espera explícita que usaré en las páginas
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @After
     public void tearDown() {
+        // Cierro el navegador al terminar cada escenario
         if (driver != null) {
             driver.quit();
         }
     }
 
-    // Métodos estáticos para usar el driver y la espera en otras clases
+    // Métodos para acceder al driver y a la espera desde otras clases
     public static WebDriver getDriver() {
         return driver;
     }
